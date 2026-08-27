@@ -180,6 +180,21 @@
     padding-inline: var(--gutter);
   }
 
+  /* One quiet pulse on first arrival so the lens reads as interactive. */
+  .lens-switch[data-hint] {
+    animation: lens-hint 1.3s var(--ease) 2;
+  }
+
+  @keyframes lens-hint {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+    50% {
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+  }
+
   /* Elevation comes from border luminosity, never drop shadows. */
   .hairline {
     border: 1px solid var(--hairline);
