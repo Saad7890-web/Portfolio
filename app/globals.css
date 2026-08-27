@@ -1,0 +1,210 @@
+@import 'tailwindcss';
+
+/* ============================================================================
+   Design tokens
+   Dark-first "instrument panel" palette: near-black ground, hairline structure,
+   a single electric accent used at ~5% of surface. Light mode is a token swap
+   only — no component ever branches on theme.
+   Swap --accent in both blocks to re-skin the entire site.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  --bg: #f7f8f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f4;
+  --surface-3: #e6e9ec;
+
+  --text: #0b0d10;
+  --muted: #4e555d;
+  --faint: #8a9199;
+
+  --hairline: rgb(9 10 12 / 0.12);
+  --hairline-strong: rgb(9 10 12 / 0.22);
+
+  --accent: #0793b4;
+  --accent-hi: #06b6d4;
+  --accent-ink: #ffffff;
+  --accent-soft: rgb(7 147 180 / 0.12);
+
+  --grain-opacity: 0.02;
+
+  /* one easing curve for the entire site — consistency reads as senior */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+  --dur-slow: 620ms;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --measure: 68ch;
+}
+
+:root:not([data-theme='light']) {
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+
+    --bg: #07080a;
+    --surface: #0e1013;
+    --surface-2: #14171b;
+    --surface-3: #1c2026;
+
+    --text: #e8eaed;
+    --muted: #9aa1a9;
+    --faint: #6b7280;
+
+    --hairline: rgb(255 255 255 / 0.08);
+    --hairline-strong: rgb(255 255 255 / 0.16);
+
+    --accent: #4de8ff;
+    --accent-hi: #8af3ff;
+    --accent-ink: #04202a;
+    --accent-soft: rgb(77 232 255 / 0.12);
+
+    --grain-opacity: 0.035;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #07080a;
+  --surface: #0e1013;
+  --surface-2: #14171b;
+  --surface-3: #1c2026;
+
+  --text: #e8eaed;
+  --muted: #9aa1a9;
+  --faint: #6b7280;
+
+  --hairline: rgb(255 255 255 / 0.08);
+  --hairline-strong: rgb(255 255 255 / 0.16);
+
+  --accent: #4de8ff;
+  --accent-hi: #8af3ff;
+  --accent-ink: #04202a;
+  --accent-soft: rgb(77 232 255 / 0.12);
+
+  --grain-opacity: 0.035;
+}
+
+/* Expose tokens to Tailwind utilities: bg-bg, text-muted, border-hairline, … */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  --radius-token: var(--radius);
+  --ease-token: var(--ease);
+}
+
+/* ========================================================================= */
+
+@layer base {
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Metrics, tech chips and code are always mono — this is the visual identity. */
+  code,
+  kbd,
+  pre,
+  samp,
+  [data-numeral] {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Not decorative: the whole site must stay legible with motion disabled. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Elevation comes from border luminosity, never drop shadows. */
+  .hairline {
+    border: 1px solid var(--hairline);
+  }
+
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Recruiters print portfolios. Make that not embarrassing. */
+@media print {
+  :root {
+    --bg: #ffffff;
+    --text: #000000;
+    --muted: #333333;
+  }
+  .grain::after,
+  [data-print-hide] {
+    display: none !important;
+  }
+}
