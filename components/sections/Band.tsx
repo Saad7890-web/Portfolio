@@ -19,8 +19,19 @@ export function Band({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} aria-label={label} className="border-hairline shell border-t py-14">
-      <h2 className="text-faint bg-bg sticky top-16 z-30 mb-6 py-2 text-[0.72rem] tracking-[0.18em] uppercase">
+    <section
+      id={id}
+      // Named by the heading rather than by a copy of it: an aria-label would
+      // shadow the h2, and a screen reader would announce the same words twice
+      // — once entering the region, once reading its heading.
+      aria-labelledby={`${id}-label`}
+      className="border-hairline shell border-t py-14"
+    >
+      <h2
+        id={`${id}-label`}
+        data-print-static
+        className="text-faint bg-bg sticky top-16 z-30 mb-6 py-2 text-[0.72rem] tracking-[0.18em] uppercase"
+      >
         {label}
       </h2>
       <Reveal>{children}</Reveal>
