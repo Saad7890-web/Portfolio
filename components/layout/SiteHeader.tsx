@@ -1,3 +1,4 @@
+import { ScrollProgress } from '@/components/primitives/ScrollProgress';
 import { ThemeToggle } from '@/components/primitives/ThemeToggle';
 import { site } from '@/lib/site';
 
@@ -21,7 +22,7 @@ export function SiteHeader() {
             <a
               key={href}
               href={href}
-              className="text-muted hover:text-text text-[0.82rem] transition-colors duration-200"
+              className="text-muted hover:text-text text-[0.82rem] transition-colors"
             >
               {label}
             </a>
@@ -30,6 +31,8 @@ export function SiteHeader() {
 
         <ThemeToggle />
       </div>
+
+      <ScrollProgress />
     </header>
   );
 }
