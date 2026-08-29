@@ -93,3 +93,29 @@ export interface Signal {
   detail: string;
   href?: string;
 }
+
+/**
+ * The four states of the deep-dive diagram. Ordered: this is a story, and the
+ * section plays it in sequence before it hands the controls over.
+ */
+export const STAGES = ['record', 'replay', 'divergence', 'fork'] as const;
+
+export type StageId = (typeof STAGES)[number];
+
+/** What happened to one step of the agent run, in the state being shown. */
+export type StepState = 'taped' | 'replayed' | 'flagged' | 'skipped' | 'edited' | 'live';
+
+export interface DeepDiveStage {
+  id: StageId;
+  label: string;
+  /** One line: what the diagram is doing right now. */
+  claim: string;
+  /** The mechanism underneath it — this is the part that has to be true. */
+  detail: string;
+  /** The number that makes the state matter. Set in mono at display size. */
+  readout: { value: string; label: string };
+  /** One chip per step of the run, left to right. */
+  steps: StepState[];
+  /** Reads the strip out loud, for anyone who cannot see it. */
+  legend: string;
+}

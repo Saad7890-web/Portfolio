@@ -6,4 +6,5 @@ export { pillarDetails, pillarById } from './pillars';
 export { experience } from './experience';
 export { stack } from './stack';
 export { signals } from './signals';
+export { deepDive, deepDiveNodes, deepDiveStages } from './deepdive';
 export { cvForPillar, generalCv } from './cvs';
