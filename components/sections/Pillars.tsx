@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { useLens } from '@/components/lens/LensProvider';
 import { pillarDetails, PILLAR_LABEL } from '@/content';
+import { DIM } from '@/lib/rank';
 import { ease } from '@/lib/motion';
 import { Band } from './Band';
 
@@ -24,7 +25,7 @@ export function Pillars() {
           return (
             <motion.article
               key={p.id}
-              animate={{ opacity: active ? 1 : 0.72 }}
+              animate={{ opacity: active ? 1 : DIM }}
               transition={t}
               className="bg-surface relative p-6"
             >

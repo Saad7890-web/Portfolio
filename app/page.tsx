@@ -5,9 +5,11 @@ import { Hero } from '@/components/sections/Hero';
 import { ProofBar } from '@/components/sections/ProofBar';
 import { Pillars } from '@/components/sections/Pillars';
 import { Work } from '@/components/sections/Work';
+import { DeepDive } from '@/components/sections/DeepDive';
 import { Experience } from '@/components/sections/Experience';
 import { StackGrid } from '@/components/sections/StackGrid';
 import { Signals } from '@/components/sections/Signals';
+import { Contact } from '@/components/sections/Contact';
 
 export default function Home() {
   return (
@@ -18,9 +20,11 @@ export default function Home() {
         <ProofBar />
         <Pillars />
         <Work />
+        <DeepDive />
         <Experience />
         <StackGrid />
         <Signals />
+        <Contact />
       </main>
       <SiteFooter />
     </LensProvider>

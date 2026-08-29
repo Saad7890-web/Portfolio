@@ -1,9 +1,11 @@
 'use client';
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { Glyph } from '@/components/primitives/Glyph';
 import { LensSwitch } from '@/components/lens/LensSwitch';
 import { useLens } from '@/components/lens/LensProvider';
 import { HeroVisual } from '@/components/hero/HeroVisual';
+import { ScrollCue } from '@/components/hero/ScrollCue';
 import { cvForPillar, headline, profile, summary } from '@/content';
 import { ease } from '@/lib/motion';
 import { asset } from '@/lib/site';
@@ -53,7 +55,7 @@ export function Hero() {
               download
               className="bg-accent text-accent-ink rounded-full px-5 py-2.5 text-[0.85rem] font-medium"
             >
-              {cv.label} ↓
+              {cv.label} <Glyph>↓</Glyph>
             </a>
             <a
               href={`mailto:${profile.email}`}
@@ -62,6 +64,8 @@ export function Hero() {
               {profile.email}
             </a>
           </div>
+
+          <ScrollCue />
         </div>
 
         {/* The lens re-reads the mesh as well as the copy — same geometry, four

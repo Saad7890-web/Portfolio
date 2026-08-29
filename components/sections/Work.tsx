@@ -1,6 +1,7 @@
 'use client';
 
 import { LayoutGroup, motion, useReducedMotion } from 'motion/react';
+import { Glyph } from '@/components/primitives/Glyph';
 import { useLens } from '@/components/lens/LensProvider';
 import { useRanked } from '@/components/lens/useRanked';
 import { projects, PILLAR_SHORT, type Project } from '@/content';
@@ -58,7 +59,7 @@ function ProjectCard({ project, animate }: { project: Project; animate: boolean 
             className="text-accent hover:text-accent-hi ml-auto text-[0.75rem] transition-colors"
             data-numeral
           >
-            {project.hrefLabel} ↗
+            {project.hrefLabel} <Glyph>↗</Glyph>
           </a>
         )}
       </header>

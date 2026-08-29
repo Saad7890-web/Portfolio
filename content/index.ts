@@ -1,9 +1,10 @@
 export * from './types';
-export { profile, headline, summary } from './profile';
+export { profile, headline, summary, contactLead } from './profile';
 export { metrics } from './metrics';
 export { projects, projectById } from './projects';
 export { pillarDetails, pillarById } from './pillars';
 export { experience } from './experience';
 export { stack } from './stack';
 export { signals } from './signals';
+export { deepDive, deepDiveNodes, deepDiveStages } from './deepdive';
 export { cvForPillar, generalCv } from './cvs';

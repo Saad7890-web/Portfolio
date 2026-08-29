@@ -1,3 +1,4 @@
+import { Glyph } from '@/components/primitives/Glyph';
 import { signals } from '@/content';
 import { Band } from './Band';
 
@@ -11,7 +12,7 @@ export function Signals() {
             <dt className="font-medium">
               {s.href ? (
                 <a href={s.href} className="hover:text-accent transition-colors">
-                  {s.label} ↗
+                  {s.label} <Glyph>↗</Glyph>
                 </a>
               ) : (
                 s.label

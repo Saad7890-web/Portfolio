@@ -44,3 +44,10 @@ export const headline: Record<Pillar, { lead: string; sub: string }> = {
 /** Sits under the lens switch as a one-line "who is this" for every lens. */
 export const summary =
   'Software engineer who takes systems from an unclear problem statement through production and owns them afterwards. Two multi-tenant SaaS platforms shipped, open-source developer tooling on PyPI and npm, and a B.Sc. in Computer Science.';
+
+/**
+ * Opens the contact section. Deliberately an offer rather than a claim about
+ * availability or relocation — nothing here that a CV line can't back up.
+ */
+export const contactLead =
+  'Email is the fastest way to reach me. Happy to go deeper on anything above — the schema behind a number, how a deploy stays zero-downtime, or what the replay proxy does when a run diverges.';

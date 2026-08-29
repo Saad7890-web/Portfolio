@@ -6,6 +6,12 @@
    a single electric accent used at ~5% of surface. Light mode is a token swap
    only — no component ever branches on theme.
    Swap --accent in both blocks to re-skin the entire site.
+
+   Every ink/ground pair below is at or above 4.5:1 in both themes, which is
+   why the light accent is a deep teal rather than the same electric cyan the
+   dark theme uses: on a white card that cyan lands near 2.4:1, and the accent
+   is link text and button labels, not decoration. `pnpm check:contrast` reads
+   these tokens and fails the build on anything that drops under AA.
    ========================================================================= */
 
 :root {
@@ -18,15 +24,19 @@
 
   --text: #0b0d10;
   --muted: #4e555d;
-  --faint: #8a9199;
+  --faint: #666b71;
 
   --hairline: rgb(9 10 12 / 0.12);
   --hairline-strong: rgb(9 10 12 / 0.22);
 
-  --accent: #0793b4;
-  --accent-hi: #06b6d4;
+  --accent: #056d85;
+  --accent-hi: #045468;
   --accent-ink: #ffffff;
-  --accent-soft: rgb(7 147 180 / 0.12);
+  --accent-soft: rgb(5 109 133 / 0.12);
+
+  /* Not a second accent: the only thing on the site allowed to mean "wrong". */
+  --warn: #a04a07;
+  --warn-soft: rgb(160 74 7 / 0.12);
 
   --grain-opacity: 0.02;
 
@@ -53,7 +63,7 @@
 
     --text: #e8eaed;
     --muted: #9aa1a9;
-    --faint: #6b7280;
+    --faint: #7e8797;
 
     --hairline: rgb(255 255 255 / 0.08);
     --hairline-strong: rgb(255 255 255 / 0.16);
@@ -62,6 +72,9 @@
     --accent-hi: #8af3ff;
     --accent-ink: #04202a;
     --accent-soft: rgb(77 232 255 / 0.12);
+
+    --warn: #ffb347;
+    --warn-soft: rgb(255 179 71 / 0.14);
 
     --grain-opacity: 0.035;
   }
@@ -77,7 +90,7 @@
 
   --text: #e8eaed;
   --muted: #9aa1a9;
-  --faint: #6b7280;
+  --faint: #7e8797;
 
   --hairline: rgb(255 255 255 / 0.08);
   --hairline-strong: rgb(255 255 255 / 0.16);
@@ -87,7 +100,22 @@
   --accent-ink: #04202a;
   --accent-soft: rgb(77 232 255 / 0.12);
 
+  --warn: #ffb347;
+  --warn-soft: rgb(255 179 71 / 0.14);
+
   --grain-opacity: 0.035;
+}
+
+/*
+ * Tailwind's own defaults for `transition-*`, `duration-*` and `ease-*`
+ * utilities. Without these, every `transition-colors` in the codebase runs on
+ * Tailwind's 150ms cubic-bezier(0.4,0,0.2,1) — a second motion vocabulary
+ * nobody chose. Pointing them at the tokens makes the curve unopt-out-able.
+ */
+@theme {
+  --default-transition-duration: var(--dur-fast);
+  --default-transition-timing-function: var(--ease);
+  --ease-token: var(--ease);
 }
 
 /* Expose tokens to Tailwind utilities: bg-bg, text-muted, border-hairline, … */
@@ -105,12 +133,13 @@
   --color-accent-hi: var(--accent-hi);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
 
   --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
 
   --radius-token: var(--radius);
-  --ease-token: var(--ease);
 }
 
 /* ========================================================================= */
@@ -122,7 +151,28 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    /* The no-JS and reduced-motion path. Lenis owns the scroll when it runs. */
     scroll-behavior: smooth;
+    /*
+     * Keeps the sticky header off anything the browser scrolls into view. On
+     * the scroll container rather than as `scroll-margin-top` on the sections,
+     * because this way it also covers sequential focus navigation — tab into a
+     * link just past the fold and it is scrolled clear of the header instead of
+     * under it. Both properties apply at once and add up, in native scrolling
+     * and in Lenis alike, so this is the one place the offset is declared.
+     */
+    scroll-padding-top: 5.5rem;
+  }
+
+  /* Two smooth-scroll implementations fight over the same gesture; Lenis puts
+     this class on <html> for exactly as long as it is the one in charge. */
+  html.lenis {
+    scroll-behavior: auto;
+    height: auto;
+  }
+
+  html.lenis body {
+    height: auto;
   }
 
   body {
@@ -132,7 +182,10 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    /* `clip`, not `hidden`: `overflow-x: hidden` makes <body> a scroll
+       container, which silently breaks every `position: sticky` inside it.
+       `clip` trims the same overflow without creating one. */
+    overflow-x: clip;
   }
 
   /* Metrics, tech chips and code are always mono — this is the visual identity. */
@@ -170,6 +223,25 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /*
+   * Windows High Contrast. The OS replaces every colour with a system one, so
+   * the accent fill that marks the current lens and the current deep-dive
+   * state simply disappears — leaving four buttons with no indication of which
+   * one is on. Redraw the marker as an outline in a colour the OS guarantees.
+   */
+  @media (forced-colors: active) {
+    [role='radio'][aria-checked='true'],
+    [role='tab'][aria-selected='true'] {
+      outline: 2px solid Highlight;
+      outline-offset: -1px;
+    }
+
+    /* Texture over a palette the visitor has asked the OS to control. */
+    .grain::after {
+      display: none;
+    }
+  }
 }
 
 @layer components {
@@ -192,6 +264,57 @@
     }
     50% {
       box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+  }
+
+  /*
+   * Scroll reveal. The hidden state is an attribute that only ever exists
+   * because JS set it, so no-JS, print and crawlers get the settled page —
+   * nothing on this site is legible only after a script runs. The attribute is
+   * removed again once the transition ends, which also clears the transform:
+   * a lingering one would turn the element into a containing block and break
+   * any `position: sticky` beneath it.
+   */
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition:
+      opacity var(--dur-slow) var(--ease),
+      transform var(--dur-slow) var(--ease);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal='shown'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /*
+   * The timeline rail draws itself as the section crosses the viewport. A
+   * scroll-driven CSS animation costs no JS and no main-thread work; where it
+   * is unsupported the @supports guard never applies and the rail is simply
+   * drawn in full, which is the correct resting state anyway.
+   */
+  .rail {
+    transform-origin: top;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media not (prefers-reduced-motion: reduce) {
+      .rail {
+        animation: rail-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 60%;
+      }
+    }
+  }
+
+  @keyframes rail-draw {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
     }
   }
 
@@ -221,5 +344,22 @@
   .grain::after,
   [data-print-hide] {
     display: none !important;
+  }
+  /* Sticky is meaningless on paper and actively harmful: the header would be
+     printed over the top of the hero, and each band label would strand itself
+     on whichever page its section happened to start. */
+  [data-print-static] {
+    position: static !important;
+  }
+  /* Nothing on this page is long enough to be worth splitting across a sheet. */
+  article,
+  li {
+    break-inside: avoid;
+  }
+  /* A page printed mid-scroll must not lose the sections still waiting to be
+     revealed. Print resolves every reveal to its settled state. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

@@ -50,14 +50,19 @@ export function HeroVisual() {
   const onReady = useCallback(() => setPainted(true), []);
 
   return (
-    <div
-      role="img"
-      aria-label={`Diagram: ${scene.caption}`}
-      data-print-hide
-      className="flex flex-col gap-4"
-    >
+    /*
+     * A figure, not a labelled `role="img"`. The caption below is already the
+     * text alternative — it is the same sentence the label would carry, except
+     * everyone can read it. Wrapping the whole thing in `role="img"` made all
+     * of its descendants presentational, which meant that sentence existed on
+     * the page twice and was reachable neither time.
+     */
+    <figure data-print-hide className="flex flex-col gap-4">
       <div
         ref={frame}
+        // The rendering itself: nothing in here is focusable, and nothing in
+        // here says anything the caption does not.
+        aria-hidden
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
         className="relative h-[300px] w-full sm:h-[400px] lg:h-[500px]"
@@ -69,7 +74,11 @@ export function HeroVisual() {
             transition={ease(0.5)}
             onAnimationComplete={() => painted && setFallbackRetired(true)}
           >
-            <MeshFallback lens={lens} animated={tier !== 'static'} />
+            <MeshFallback
+              lens={lens}
+              animated={tier !== 'static'}
+              running={inView && pageVisible}
+            />
           </motion.div>
         )}
 
@@ -86,7 +95,7 @@ export function HeroVisual() {
         {/* Anchor labels live in the DOM, positioned per frame by the render
             loop: crisp at any DPR, themed by CSS, and no font pipeline in the
             3D bundle. Hidden until the canvas is driving them. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {ANCHORS.map((node, i) => (
             <span
               key={node}
@@ -105,7 +114,7 @@ export function HeroVisual() {
         </div>
       </div>
 
-      <div className="min-h-[2.5rem]">
+      <figcaption className="min-h-[2.5rem]">
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
             key={lens}
@@ -119,7 +128,7 @@ export function HeroVisual() {
             {scene.caption}
           </motion.p>
         </AnimatePresence>
-      </div>
-    </div>
+      </figcaption>
+    </figure>
   );
 }
