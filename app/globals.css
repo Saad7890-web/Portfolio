@@ -155,7 +155,10 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    /* `clip`, not `hidden`: `overflow-x: hidden` makes <body> a scroll
+       container, which silently breaks every `position: sticky` inside it.
+       `clip` trims the same overflow without creating one. */
+    overflow-x: clip;
   }
 
   /* Metrics, tech chips and code are always mono — this is the visual identity. */
@@ -218,6 +221,28 @@
     }
   }
 
+  /*
+   * Scroll reveal. The hidden state is an attribute that only ever exists
+   * because JS set it, so no-JS, print and crawlers get the settled page —
+   * nothing on this site is legible only after a script runs. The attribute is
+   * removed again once the transition ends, which also clears the transform:
+   * a lingering one would turn the element into a containing block and break
+   * any `position: sticky` beneath it.
+   */
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition:
+      opacity var(--dur-slow) var(--ease),
+      transform var(--dur-slow) var(--ease);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal='shown'] {
+    opacity: 1;
+    transform: none;
+  }
+
   /* Elevation comes from border luminosity, never drop shadows. */
   .hairline {
     border: 1px solid var(--hairline);
@@ -244,5 +269,11 @@
   .grain::after,
   [data-print-hide] {
     display: none !important;
+  }
+  /* A page printed mid-scroll must not lose the sections still waiting to be
+     revealed. Print resolves every reveal to its settled state. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
