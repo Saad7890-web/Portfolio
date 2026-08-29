@@ -74,7 +74,11 @@ export function HeroVisual() {
             transition={ease(0.5)}
             onAnimationComplete={() => painted && setFallbackRetired(true)}
           >
-            <MeshFallback lens={lens} animated={tier !== 'static'} />
+            <MeshFallback
+              lens={lens}
+              animated={tier !== 'static'}
+              running={inView && pageVisible}
+            />
           </motion.div>
         )}
 

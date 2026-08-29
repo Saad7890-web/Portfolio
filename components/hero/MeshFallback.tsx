@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Pillar } from '@/content/types';
 import { FLAT_VIEWBOX, SCENES, flatten } from './scene';
@@ -11,12 +11,40 @@ import { ease } from '@/lib/motion';
  * visual for every device on the light path, it is the LCP paint for devices
  * that do get WebGL, and with `animated={false}` it is the reduced-motion
  * rendering. Inline SVG, no images, no extra bytes over the HTML itself.
+ *
+ * `running` is the same pause the canvas gets, and it matters more here: the
+ * light path is the mobile path, so the device least able to afford a frame
+ * loop was the one running it whether or not the hero was on screen. SMIL is
+ * main-thread work — measured at roughly one forced layout per frame, for a
+ * graphic scrolled a full page away.
  */
-export function MeshFallback({ lens, animated }: { lens: Pillar; animated: boolean }) {
+export function MeshFallback({
+  lens,
+  animated,
+  running,
+}: {
+  lens: Pillar;
+  animated: boolean;
+  running: boolean;
+}) {
+  const svg = useRef<SVGSVGElement>(null);
+
+  // `pauseAnimations` rather than tearing the <animateMotion> elements out:
+  // pausing holds every packet exactly where it is, so coming back to the hero
+  // resumes the flight instead of snapping all six back to their edge starts.
+  // Keyed on `lens` as well because the element is replaced when the lens does.
+  useEffect(() => {
+    const el = svg.current;
+    if (!el || !animated) return;
+    if (running) el.unpauseAnimations();
+    else el.pauseAnimations();
+  }, [animated, running, lens]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.svg
         key={lens}
+        ref={svg}
         viewBox={`0 0 ${FLAT_VIEWBOX} ${FLAT_VIEWBOX}`}
         initial={animated ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
