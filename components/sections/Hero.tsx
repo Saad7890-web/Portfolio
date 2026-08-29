@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { LensSwitch } from '@/components/lens/LensSwitch';
 import { useLens } from '@/components/lens/LensProvider';
 import { HeroVisual } from '@/components/hero/HeroVisual';
+import { ScrollCue } from '@/components/hero/ScrollCue';
 import { cvForPillar, headline, profile, summary } from '@/content';
 import { ease } from '@/lib/motion';
 import { asset } from '@/lib/site';
@@ -62,6 +63,8 @@ export function Hero() {
               {profile.email}
             </a>
           </div>
+
+          <ScrollCue />
         </div>
 
         {/* The lens re-reads the mesh as well as the copy — same geometry, four
