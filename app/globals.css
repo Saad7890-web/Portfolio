@@ -153,6 +153,15 @@
     -webkit-text-size-adjust: 100%;
     /* The no-JS and reduced-motion path. Lenis owns the scroll when it runs. */
     scroll-behavior: smooth;
+    /*
+     * Keeps the sticky header off anything the browser scrolls into view. On
+     * the scroll container rather than as `scroll-margin-top` on the sections,
+     * because this way it also covers sequential focus navigation — tab into a
+     * link just past the fold and it is scrolled clear of the header instead of
+     * under it. Both properties apply at once and add up, in native scrolling
+     * and in Lenis alike, so this is the one place the offset is declared.
+     */
+    scroll-padding-top: 5.5rem;
   }
 
   /* Two smooth-scroll implementations fight over the same gesture; Lenis puts
@@ -164,13 +173,6 @@
 
   html.lenis body {
     height: auto;
-  }
-
-  /* Anchor targets land below the sticky header rather than behind it — read
-     by CSS smooth scroll, by Lenis, and by the browser's own hash jump alike. */
-  main[id],
-  section[id] {
-    scroll-margin-top: 5.5rem;
   }
 
   body {
