@@ -28,6 +28,10 @@
   --accent-ink: #ffffff;
   --accent-soft: rgb(7 147 180 / 0.12);
 
+  /* Not a second accent: the only thing on the site allowed to mean "wrong". */
+  --warn: #b45309;
+  --warn-soft: rgb(180 83 9 / 0.12);
+
   --grain-opacity: 0.02;
 
   /* one easing curve for the entire site — consistency reads as senior */
@@ -63,6 +67,9 @@
     --accent-ink: #04202a;
     --accent-soft: rgb(77 232 255 / 0.12);
 
+    --warn: #ffb347;
+    --warn-soft: rgb(255 179 71 / 0.14);
+
     --grain-opacity: 0.035;
   }
 }
@@ -87,6 +94,9 @@
   --accent-ink: #04202a;
   --accent-soft: rgb(77 232 255 / 0.12);
 
+  --warn: #ffb347;
+  --warn-soft: rgb(255 179 71 / 0.14);
+
   --grain-opacity: 0.035;
 }
 
@@ -105,6 +115,8 @@
   --color-accent-hi: var(--accent-hi);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
 
   --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
