@@ -40,11 +40,16 @@ interface ConstrainedNavigator extends Navigator {
   connection?: { saveData?: boolean };
 }
 
+/** Synchronous read, for the imperative paths where a hook is a frame too late. */
+export function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia(REDUCED).matches;
+}
+
 export function detectTier(): MotionTier {
   if (typeof window === 'undefined') return 'static';
 
   // Not a preference to negotiate with: no loop at all.
-  if (window.matchMedia(REDUCED).matches) return 'static';
+  if (prefersReducedMotion()) return 'static';
 
   const nav = navigator as ConstrainedNavigator;
 
