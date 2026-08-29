@@ -8,6 +8,7 @@ import { Work } from '@/components/sections/Work';
 import { Experience } from '@/components/sections/Experience';
 import { StackGrid } from '@/components/sections/StackGrid';
 import { Signals } from '@/components/sections/Signals';
+import { Contact } from '@/components/sections/Contact';
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <Experience />
         <StackGrid />
         <Signals />
+        <Contact />
       </main>
       <SiteFooter />
     </LensProvider>
