@@ -145,7 +145,26 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    /* The no-JS and reduced-motion path. Lenis owns the scroll when it runs. */
     scroll-behavior: smooth;
+  }
+
+  /* Two smooth-scroll implementations fight over the same gesture; Lenis puts
+     this class on <html> for exactly as long as it is the one in charge. */
+  html.lenis {
+    scroll-behavior: auto;
+    height: auto;
+  }
+
+  html.lenis body {
+    height: auto;
+  }
+
+  /* Anchor targets land below the sticky header rather than behind it — read
+     by CSS smooth scroll, by Lenis, and by the browser's own hash jump alike. */
+  main[id],
+  section[id] {
+    scroll-margin-top: 5.5rem;
   }
 
   body {

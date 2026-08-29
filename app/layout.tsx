@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
+import { SmoothScroll } from '@/components/primitives/SmoothScroll';
 import { site } from '@/lib/site';
 import { themeScript } from '@/lib/theme';
 import './globals.css';
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        <SmoothScroll />
         {children}
       </body>
     </html>
