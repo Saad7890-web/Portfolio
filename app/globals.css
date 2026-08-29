@@ -243,6 +243,35 @@
     transform: none;
   }
 
+  /*
+   * The timeline rail draws itself as the section crosses the viewport. A
+   * scroll-driven CSS animation costs no JS and no main-thread work; where it
+   * is unsupported the @supports guard never applies and the rail is simply
+   * drawn in full, which is the correct resting state anyway.
+   */
+  .rail {
+    transform-origin: top;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media not (prefers-reduced-motion: reduce) {
+      .rail {
+        animation: rail-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 60%;
+      }
+    }
+  }
+
+  @keyframes rail-draw {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
   /* Elevation comes from border luminosity, never drop shadows. */
   .hairline {
     border: 1px solid var(--hairline);
