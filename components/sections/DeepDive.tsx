@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { Glyph } from '@/components/primitives/Glyph';
 import { Diagram } from '@/components/deepdive/Diagram';
 import { StageSwitch } from '@/components/deepdive/StageSwitch';
 import { PANEL_ID, tabId } from '@/components/deepdive/ids';
@@ -63,7 +64,7 @@ export function DeepDive() {
             className="text-accent hover:text-accent-hi text-[0.75rem] transition-colors"
             data-numeral
           >
-            {project.name} · {project.hrefLabel} ↗
+            {project.name} · {project.hrefLabel} <Glyph>↗</Glyph>
           </a>
         )}
       </div>

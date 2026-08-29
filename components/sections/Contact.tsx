@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { Glyph } from '@/components/primitives/Glyph';
 import { useLens } from '@/components/lens/LensProvider';
 import { contactLead, cvForPillar, generalCv, PILLAR_LABEL, profile } from '@/content';
 import { ease } from '@/lib/motion';
@@ -35,12 +36,12 @@ export function Contact() {
           <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.85rem]">
             <li>
               <a className="hover:text-accent transition-colors" href={profile.links.github}>
-                GitHub ↗
+                GitHub <Glyph>↗</Glyph>
               </a>
             </li>
             <li>
               <a className="hover:text-accent transition-colors" href={profile.links.leetcode}>
-                LeetCode ↗
+                LeetCode <Glyph>↗</Glyph>
               </a>
             </li>
             <li className="text-faint" data-numeral>
@@ -87,7 +88,7 @@ export function Contact() {
                 {cv.label}
               </motion.span>
             </AnimatePresence>
-            <span aria-hidden>↓</span>
+            <Glyph>↓</Glyph>
           </a>
 
           <a
@@ -95,7 +96,7 @@ export function Contact() {
             download
             className="text-faint hover:text-text mt-3 inline-block text-[0.78rem] transition-colors"
           >
-            or the untilted version ↓
+            or the untilted version <Glyph>↓</Glyph>
           </a>
         </div>
       </div>
