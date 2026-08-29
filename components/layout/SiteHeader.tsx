@@ -13,6 +13,7 @@ export function SiteHeader() {
         <nav aria-label="Sections" className="hidden items-center gap-7 md:flex" data-print-hide>
           {[
             ['Work', '#work'],
+            ['Deep dive', '#deep-dive'],
             ['Stack', '#stack'],
             ['Experience', '#experience'],
             ['Contact', '#contact'],
