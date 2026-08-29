@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { CountUp } from '@/components/primitives/CountUp';
 import { useLens } from '@/components/lens/LensProvider';
 import { useTopRanked } from '@/components/lens/useRanked';
 import { metrics } from '@/content';
@@ -32,7 +33,7 @@ export function ProofBar() {
               className="bg-surface p-5"
             >
               <dt className="text-3xl tracking-tight" data-numeral>
-                {m.value}
+                <CountUp value={m.value} />
               </dt>
               <dd className="mt-2">
                 <span className="block text-[0.8rem]">{m.label}</span>
