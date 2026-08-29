@@ -1,5 +1,5 @@
 export * from './types';
-export { profile, headline, summary } from './profile';
+export { profile, headline, summary, contactLead } from './profile';
 export { metrics } from './metrics';
 export { projects, projectById } from './projects';
 export { pillarDetails, pillarById } from './pillars';
