@@ -223,6 +223,25 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /*
+   * Windows High Contrast. The OS replaces every colour with a system one, so
+   * the accent fill that marks the current lens and the current deep-dive
+   * state simply disappears — leaving four buttons with no indication of which
+   * one is on. Redraw the marker as an outline in a colour the OS guarantees.
+   */
+  @media (forced-colors: active) {
+    [role='radio'][aria-checked='true'],
+    [role='tab'][aria-selected='true'] {
+      outline: 2px solid Highlight;
+      outline-offset: -1px;
+    }
+
+    /* Texture over a palette the visitor has asked the OS to control. */
+    .grain::after {
+      display: none;
+    }
+  }
 }
 
 @layer components {
