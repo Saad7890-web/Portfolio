@@ -6,6 +6,12 @@
    a single electric accent used at ~5% of surface. Light mode is a token swap
    only — no component ever branches on theme.
    Swap --accent in both blocks to re-skin the entire site.
+
+   Every ink/ground pair below is at or above 4.5:1 in both themes, which is
+   why the light accent is a deep teal rather than the same electric cyan the
+   dark theme uses: on a white card that cyan lands near 2.4:1, and the accent
+   is link text and button labels, not decoration. `pnpm check:contrast` reads
+   these tokens and fails the build on anything that drops under AA.
    ========================================================================= */
 
 :root {
@@ -18,19 +24,19 @@
 
   --text: #0b0d10;
   --muted: #4e555d;
-  --faint: #8a9199;
+  --faint: #666b71;
 
   --hairline: rgb(9 10 12 / 0.12);
   --hairline-strong: rgb(9 10 12 / 0.22);
 
-  --accent: #0793b4;
-  --accent-hi: #06b6d4;
+  --accent: #056d85;
+  --accent-hi: #045468;
   --accent-ink: #ffffff;
-  --accent-soft: rgb(7 147 180 / 0.12);
+  --accent-soft: rgb(5 109 133 / 0.12);
 
   /* Not a second accent: the only thing on the site allowed to mean "wrong". */
-  --warn: #b45309;
-  --warn-soft: rgb(180 83 9 / 0.12);
+  --warn: #a04a07;
+  --warn-soft: rgb(160 74 7 / 0.12);
 
   --grain-opacity: 0.02;
 
@@ -57,7 +63,7 @@
 
     --text: #e8eaed;
     --muted: #9aa1a9;
-    --faint: #6b7280;
+    --faint: #7e8797;
 
     --hairline: rgb(255 255 255 / 0.08);
     --hairline-strong: rgb(255 255 255 / 0.16);
@@ -84,7 +90,7 @@
 
   --text: #e8eaed;
   --muted: #9aa1a9;
-  --faint: #6b7280;
+  --faint: #7e8797;
 
   --hairline: rgb(255 255 255 / 0.08);
   --hairline-strong: rgb(255 255 255 / 0.16);
