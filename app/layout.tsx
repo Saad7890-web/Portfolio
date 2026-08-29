@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { SmoothScroll } from '@/components/primitives/SmoothScroll';
+import { focusAreas } from '@/content/seo';
+import { jsonLd } from '@/lib/jsonld';
 import { site } from '@/lib/site';
 import { themeScript } from '@/lib/theme';
 import './globals.css';
@@ -31,16 +33,34 @@ const mono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  // Origin only — see lib/site.ts. Every relative URL in the metadata tree,
+  // the generated OG cards included, resolves against this.
+  metadataBase: new URL(site.origin),
   title: { default: `${site.name} — ${site.title}`, template: `%s — ${site.name}` },
   description: site.description,
+  applicationName: site.name,
   authors: [{ name: site.name, url: site.links.github }],
+  creator: site.name,
+  publisher: site.name,
+  keywords: [...focusAreas],
+  // Absolute, not '/': a relative canonical resolves against metadataBase,
+  // which is the bare origin, and would drop a GitHub Pages project path.
+  alternates: { canonical: `${site.url}/` },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
+  // Telephone detection rewrites the mono numerals in the proof bar into iOS
+  // call links; every number on this page is a metric, not a phone number.
+  formatDetection: { telephone: false, address: false, email: false },
   openGraph: {
-    type: 'website',
-    url: site.url,
+    type: 'profile',
+    url: `${site.url}/`,
     title: `${site.name} — ${site.title}`,
     description: site.description,
     siteName: site.name,
+    locale: 'en_US',
   },
   twitter: { card: 'summary_large_image', title: site.name, description: site.description },
 };
@@ -57,6 +77,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {/*
+         * Structured data, derived from the same content files the page renders
+         * from — see lib/jsonld.ts. It sits in <head> rather than at the end of
+         * <body> so a crawler that reads only the head still gets it.
+         */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }}
+        />
       </head>
       <body className={`${display.variable} ${mono.variable} grain antialiased`}>
         <a
