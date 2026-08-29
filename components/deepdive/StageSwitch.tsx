@@ -92,7 +92,12 @@ export function StageSwitch({
             <span
               className={`relative z-10 flex items-center gap-2 ${active ? 'text-accent-ink font-medium' : 'text-muted hover:text-text'}`}
             >
-              <span className={active ? 'opacity-70' : 'opacity-50'} data-numeral aria-hidden>
+              {/* Hidden from assistive tech — the tab is already named, and a
+                  tablist already reports "2 of 4". It is still text a sighted
+                  reader has to read, though, so it is set apart by weight and
+                  tracking rather than faded to a contrast the rest of the
+                  palette is not allowed to use. */}
+              <span className="font-normal tracking-[0.08em]" data-numeral aria-hidden>
                 {String(index + 1).padStart(2, '0')}
               </span>
               {s.label}
