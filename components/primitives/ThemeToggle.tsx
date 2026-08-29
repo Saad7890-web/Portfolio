@@ -33,7 +33,7 @@ export function ThemeToggle() {
       aria-label={`${LABEL[theme]}. Activate to change.`}
       title={LABEL[theme]}
       data-print-hide
-      className="hairline text-muted hover:text-text hover:border-hairline-strong grid size-9 place-items-center rounded-full transition-colors duration-200"
+      className="hairline text-muted hover:text-text hover:border-hairline-strong grid size-9 place-items-center rounded-full transition-colors"
     >
       {/* Suppress until mounted so SSR markup can't disagree with localStorage. */}
       <span aria-hidden className="block size-4">

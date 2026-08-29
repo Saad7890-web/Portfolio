@@ -24,7 +24,7 @@ export function Contact() {
         <div>
           <a
             href={`mailto:${profile.email}`}
-            className="hover:text-accent inline-block text-2xl font-medium tracking-tight transition-colors duration-200 sm:text-4xl"
+            className="hover:text-accent inline-block text-2xl font-medium tracking-tight transition-colors sm:text-4xl"
             data-numeral
           >
             {profile.email}
@@ -34,18 +34,12 @@ export function Contact() {
 
           <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.85rem]">
             <li>
-              <a
-                className="hover:text-accent transition-colors duration-200"
-                href={profile.links.github}
-              >
+              <a className="hover:text-accent transition-colors" href={profile.links.github}>
                 GitHub ↗
               </a>
             </li>
             <li>
-              <a
-                className="hover:text-accent transition-colors duration-200"
-                href={profile.links.leetcode}
-              >
+              <a className="hover:text-accent transition-colors" href={profile.links.leetcode}>
                 LeetCode ↗
               </a>
             </li>
@@ -99,7 +93,7 @@ export function Contact() {
           <a
             href={asset(generalCv.file)}
             download
-            className="text-faint hover:text-text mt-3 inline-block text-[0.78rem] transition-colors duration-200"
+            className="text-faint hover:text-text mt-3 inline-block text-[0.78rem] transition-colors"
           >
             or the untilted version ↓
           </a>

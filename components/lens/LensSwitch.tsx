@@ -88,7 +88,7 @@ export function LensSwitch() {
             tabIndex={active ? 0 : -1}
             onClick={() => setLens(pillar)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className="relative rounded-full px-3.5 py-1.5 text-[0.78rem] whitespace-nowrap transition-colors duration-200"
+            className="relative rounded-full px-3.5 py-1.5 text-[0.78rem] whitespace-nowrap transition-colors"
           >
             {active && (
               <motion.span

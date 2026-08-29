@@ -60,7 +60,7 @@ export function DeepDive() {
         {project?.href && (
           <a
             href={project.href}
-            className="text-accent hover:text-accent-hi text-[0.75rem] transition-colors duration-200"
+            className="text-accent hover:text-accent-hi text-[0.75rem] transition-colors"
             data-numeral
           >
             {project.name} · {project.hrefLabel} ↗

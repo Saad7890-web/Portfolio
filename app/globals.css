@@ -100,6 +100,18 @@
   --grain-opacity: 0.035;
 }
 
+/*
+ * Tailwind's own defaults for `transition-*`, `duration-*` and `ease-*`
+ * utilities. Without these, every `transition-colors` in the codebase runs on
+ * Tailwind's 150ms cubic-bezier(0.4,0,0.2,1) — a second motion vocabulary
+ * nobody chose. Pointing them at the tokens makes the curve unopt-out-able.
+ */
+@theme {
+  --default-transition-duration: var(--dur-fast);
+  --default-transition-timing-function: var(--ease);
+  --ease-token: var(--ease);
+}
+
 /* Expose tokens to Tailwind utilities: bg-bg, text-muted, border-hairline, … */
 @theme inline {
   --color-bg: var(--bg);
@@ -122,7 +134,6 @@
   --font-mono: var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
 
   --radius-token: var(--radius);
-  --ease-token: var(--ease);
 }
 
 /* ========================================================================= */
