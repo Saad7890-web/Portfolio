@@ -4,7 +4,10 @@ import { site } from '@/lib/site';
 
 export function SiteHeader() {
   return (
-    <header className="border-hairline sticky top-0 z-50 border-b bg-[var(--bg)]/80 backdrop-blur-md">
+    <header
+      data-print-static
+      className="border-hairline sticky top-0 z-50 border-b bg-[var(--bg)]/80 backdrop-blur-md"
+    >
       <div className="shell flex h-16 items-center justify-between gap-6">
         <a href="#main" className="group flex items-center gap-2.5">
           <span className="bg-accent block size-2 rounded-full" aria-hidden />

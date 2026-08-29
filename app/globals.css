@@ -345,6 +345,17 @@
   [data-print-hide] {
     display: none !important;
   }
+  /* Sticky is meaningless on paper and actively harmful: the header would be
+     printed over the top of the hero, and each band label would strand itself
+     on whichever page its section happened to start. */
+  [data-print-static] {
+    position: static !important;
+  }
+  /* Nothing on this page is long enough to be worth splitting across a sheet. */
+  article,
+  li {
+    break-inside: avoid;
+  }
   /* A page printed mid-scroll must not lose the sections still waiting to be
      revealed. Print resolves every reveal to its settled state. */
   [data-reveal] {

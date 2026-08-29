@@ -14,7 +14,11 @@ export function Experience() {
           <li key={r.id} className="grid gap-3 sm:grid-cols-[10rem_1fr]">
             {/* Holds under the section label while its own bullets scroll by,
                 so the dates stay attached to what you are currently reading. */}
-            <p className="text-faint text-[0.75rem] sm:sticky sm:top-28 sm:self-start" data-numeral>
+            <p
+              className="text-faint text-[0.75rem] sm:sticky sm:top-28 sm:self-start"
+              data-numeral
+              data-print-static
+            >
               {r.start} — {r.end === 'present' ? 'present' : r.end}
             </p>
 
