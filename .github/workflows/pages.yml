@@ -1,0 +1,65 @@
+# GitHub Pages, from the same static export Vercel serves.
+#
+# Kept alongside vercel.json on purpose: the site is `output: 'export'`
+# precisely so neither host is load-bearing, and a deploy path nobody has run
+# is not a deploy path. Pushing to main publishes to both.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a queued deploy wait for the running one rather than cancelling it —
+# a half-published Pages site is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Project-page hosting: the site lives under /Portfolio, so the base path
+      # and the site URL have to agree. See .env.example.
+      NEXT_PUBLIC_SITE_URL: https://saad7890-web.github.io/Portfolio
+      NEXT_PUBLIC_BASE_PATH: /Portfolio
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The same gates the site was built under, so a regression fails here
+      # rather than in an audit after it is live.
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm check:contrast
+
+      - run: pnpm build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

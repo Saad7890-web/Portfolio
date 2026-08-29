@@ -1,11 +1,19 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { lensSeo } from '@/content/seo';
+import { profile } from '@/content/profile';
 import { PILLARS, PILLAR_LABEL, type Pillar } from '@/content/types';
 
 export const DEFAULT_LENS: Pillar = 'fullstack';
 
 const PARAM = 'lens';
+
+/**
+ * The four `/lens/<pillar>/` share pages. Anchored at the end so it still
+ * matches under a GitHub Pages basePath (`/Portfolio/lens/ai/`).
+ */
+const LENS_PATH = /\/lens\/([^/]+)\/?$/;
 
 interface LensContextValue {
   lens: Pillar;
@@ -25,22 +33,38 @@ const LensContext = createContext<LensContextValue | null>(null);
 const isPillar = (v: string | null): v is Pillar =>
   v !== null && (PILLARS as readonly string[]).includes(v);
 
+/**
+ * Whichever of the two lens URLs this page is on. The path wins: on a share
+ * page the segment *is* the lens, and a stray `?lens=` alongside it would be
+ * someone else's copy-paste rather than an intent.
+ */
 function readLensFromUrl(): Pillar | null {
   if (typeof window === 'undefined') return null;
+  const fromPath = window.location.pathname.match(LENS_PATH)?.[1] ?? null;
+  if (isPillar(fromPath)) return fromPath;
   const value = new URLSearchParams(window.location.search).get(PARAM);
   return isPillar(value) ? value : null;
 }
 
-export function LensProvider({ children }: { children: React.ReactNode }) {
-  // SSR renders DEFAULT_LENS so the static HTML is complete and indexable;
-  // the URL's lens is applied on mount, without animating.
-  const [lens, setLensState] = useState<Pillar>(DEFAULT_LENS);
+export function LensProvider({
+  children,
+  initial,
+}: {
+  children: React.ReactNode;
+  /** Set by the `/lens/<pillar>/` routes, which know their lens at build time. */
+  initial?: Pillar;
+}) {
+  // On `/` the static HTML renders DEFAULT_LENS so it is complete and
+  // indexable, and `?lens=` is applied on mount without animating. On a share
+  // page the lens is part of the route, so it is already in the served HTML —
+  // the crawler's copy matches what the visitor sees.
+  const [lens, setLensState] = useState<Pillar>(initial ?? DEFAULT_LENS);
   const [settled, setSettled] = useState(false);
   const [touched, setTouched] = useState(false);
 
   useEffect(() => {
     const fromUrl = readLensFromUrl();
-    if (fromUrl && fromUrl !== DEFAULT_LENS) setLensState(fromUrl);
+    if (fromUrl) setLensState(fromUrl);
   }, []);
 
   // Deliberately a frame later than the URL read above. Batched together, the
@@ -59,10 +83,26 @@ export function LensProvider({ children }: { children: React.ReactNode }) {
     // replaceState, not pushState: switching lens is a view change, not a
     // navigation, and it should not fill the back button with toggles.
     const url = new URL(window.location.href);
-    if (next === DEFAULT_LENS) url.searchParams.delete(PARAM);
-    else url.searchParams.set(PARAM, next);
+    if (LENS_PATH.test(url.pathname)) {
+      // On a share page the path is the lens. Rewriting the segment keeps a
+      // copied URL honest — it reloads, and previews, as what is on screen.
+      url.pathname = url.pathname.replace(LENS_PATH, `/lens/${next}/`);
+    } else if (next === DEFAULT_LENS) {
+      url.searchParams.delete(PARAM);
+    } else {
+      url.searchParams.set(PARAM, next);
+    }
     window.history.replaceState(null, '', url);
   }, []);
+
+  // The share pages rewrite their path when the lens changes, so the title has
+  // to follow it — otherwise /lens/backend/ gets bookmarked, and shows up in
+  // history, as "AI Engineering". Only on those routes: `/` is titled for the
+  // site, not for whichever lens happens to be active.
+  useEffect(() => {
+    if (!LENS_PATH.test(window.location.pathname)) return;
+    document.title = `${lensSeo[lens].title} — ${profile.name}`;
+  }, [lens]);
 
   // Keep in step with the URL if the visitor edits it or uses back/forward.
   useEffect(() => {
