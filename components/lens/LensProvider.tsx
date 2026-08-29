@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { PILLARS, type Pillar } from '@/content/types';
+import { PILLARS, PILLAR_LABEL, type Pillar } from '@/content/types';
 
 export const DEFAULT_LENS: Pillar = 'fullstack';
 
@@ -76,7 +76,21 @@ export function LensProvider({ children }: { children: React.ReactNode }) {
     [lens, setLens, settled, touched],
   );
 
-  return <LensContext.Provider value={value}>{children}</LensContext.Provider>;
+  return (
+    <LensContext.Provider value={value}>
+      {children}
+      {/*
+       * The radiogroup announces its own selection, but the selection is not
+       * the point — five sections below the fold re-rank, and the CV behind the
+       * download button changes. Someone who cannot see that happen is told.
+       * Silent until the visitor has actually changed the lens, so arriving on
+       * ?lens=ai does not announce a change that never happened.
+       */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {touched ? `Re-ranked for ${PILLAR_LABEL[lens]}.` : ''}
+      </div>
+    </LensContext.Provider>
+  );
 }
 
 export function useLens(): LensContextValue {
